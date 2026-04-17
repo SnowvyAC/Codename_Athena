@@ -1,0 +1,1 @@
+-- Example script for advanced preprogrammed arm movement
