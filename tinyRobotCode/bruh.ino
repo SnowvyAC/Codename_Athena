@@ -11,7 +11,10 @@ Servo wheelRF;
 Servo wheelRR;
 Servo wheelLF;
 Servo wheelLR;
-Servo ir;
+Servo irServo;
+//Variables
+int onLine;
+int speed;
 
 void setup() {
 
@@ -25,25 +28,54 @@ void setup() {
     wheelRR.attach(8);
     wheelLF.attach(7);
     wheelLR.attach(9);
-    ir.attach(10);
+    irServo.attach(10);
+    //IR sensor setup
+    pinMode(irEmi, OUTPUT);
+    pinMode(irRec, INPUT);
+    digitalWrite(irEmi, HIGH);
+
+    void turn(dir)
+    {
+        if(dir == left){
+            wheelRF.write(180);
+            wheelRR.write(180);
+            wheelLF.write(0);
+            wheelLR.write(0);
+        } else if(dir == right){
+            wheelRF.write(0);
+            wheelRR.write(0);
+            wheelLF.write(180);
+            wheelLR.write(180);
+        }
+    }
 }
 
 void loop() {
 
-    long t; //tiempo que demora en llegar el eco
-    long d; //distancia en centímetro 
+    long timeEcho;
+    long distanceUS;
 
     digitalWrite(trigger, HIGH);
     delayMicroseconds(10);
     digitalWrite(trigger, LOW);
 
-    t = pulseIn(echo, HIGH); //obtenemos el  
-    d = t/59;               
+    timeEcho = pulseIn(echo, HIGH);
+    distanceUS = timeEcho/59;  
+    
+    if(irRec == LOW){
+        onLine = 1;
+    } else {
+        onLine = 0;
+    }
+    if(onLine == 0 && irServo == 0){
+        ;
+    }
 
     //Debug
-
-    Serial.println("Distancia: " + String(d) + "cm");
+    Serial.println("Distancia: " + String(distanceUS) + "cm");
+    Serial.println("On Line: " + String(onLine));
     delay(100);
   
 
 
+}
