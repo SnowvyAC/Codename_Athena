@@ -1,22 +1,34 @@
-//Libraries
 #include <Arduino.h>
 #include <Servo.h>
-//Pins
+#include <Wire.h>
+
+//--Pins
 const int irEmi = 4; //IR emitter
 const int irRec = 5; //IR receiver
 const int trigger = 11; //ultrasound trigger
 const int echo = 12; //ultrasound echo
-//Servo
+
+//--Servo
 Servo wheelRF;
 Servo wheelRR;
 Servo wheelLF;
 Servo wheelLR;
 Servo irServo;
+
 //Variables
 int onLine;
 int speed;
 
+//I2C
+#define SLAVE_ADDR 9
+#define ANSWERSIZE 5
+String answer = "Hello";
+
 void setup() {
+
+    Wire.begin(SLAVE_ADDR);
+    Wire.onRequest(requestEvent);
+    Wire.onReceive(receiveEvent);
 
     Serial.begin(9600);
     //Ultrasound distance meter setup
