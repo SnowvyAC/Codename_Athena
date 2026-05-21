@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 
-String status = "Libre";
+String Estado = "Libre";
 int timeEcho = 0;
 int distanceUS = 0;
 bool US = false;
@@ -54,10 +54,10 @@ void ping() {
 
 void vista() {
     if (digitalRead(IR) == LOW && US == false) {
-        status = "Libre";
+        Estado = "Libre";
     }
     else {
-        status = "Bloqueado";
+        Estado = "Bloqueado";
     }
 }
 
@@ -65,9 +65,9 @@ void setup() {
     
     Serial.begin(9600);
 
-    pinMode(IR, INPUT);
+    pinMode(IR, INPUT_PULLUP);
     pinMode(Trigger, OUTPUT);
-    pinMode(Echo, INPUT);
+    pinMode(Echo, INPUT_PULLUP);
 
     ruedaIzquierda.attach(8);
     ruedaDerecha.attach(9);
@@ -79,17 +79,17 @@ void loop() {
     ping();
     vista();
 
-    if (status == Libre) {
-        caminar(adelante);
+    if (Estado == "Libre") {
+        caminar("adelante");
     }
-    else if (status == Bloqueado) {
-        caminar(izquierda);
+    else if (Estado == "Bloqueado") {
+        caminar("izquierda");
         delay(5000);
-        caminar(derecha);
+        caminar("derecha");
     }
     //debug
-    Serial.println("Estado:" + status);
-    Serial.println("linea:" + String(IR));
+    Serial.println("Estado:" + Estado);
+    Serial.println("linea:" + String(digitalRead(IR)));
     Serial.println("Camino abierto:" + String(US));
 
 }
